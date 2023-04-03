@@ -1,0 +1,22 @@
+{
+  "name": "node-farm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NgHuuTrong/nodejs_learn.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "NgHuuTrong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NgHuuTrong/nodejs_learn/issues"
+  },
+  "homepage": "https://github.com/NgHuuTrong/nodejs_learn#readme"
+}
