@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/NgHuuTrong/nodejs_learn/issues"
   },
-  "homepage": "https://github.com/NgHuuTrong/nodejs_learn#readme"
+  "homepage": "https://github.com/NgHuuTrong/nodejs_learn#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "slugify": "^1.6.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
