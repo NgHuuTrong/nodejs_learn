@@ -18,17 +18,14 @@ exports.checkID = (req, res, next, val) => {
 exports.checkBody = (req, res, next) => {
   const requestBody = req.body;
   if (!requestBody.name || !requestBody.price) {
+    let lackDetail = '';
+    if (!requestBody.name) {
+      if (!requestBody.price) lackDetail = 'name and price';
+      else lackDetail = 'name';
+    } else if (!requestBody.price) lackDetail = 'price';
     return res.status(400).json({
       status: 'fail',
-      message: `Lack of ${
-        !requestBody.name
-          ? !requestBody.price
-            ? 'name and price'
-            : 'name'
-          : !requestBody.price
-          ? 'price'
-          : ''
-      }!`,
+      message: `Lack of ${lackDetail}!`,
     });
   }
   next();
@@ -60,7 +57,7 @@ exports.getTour = (req, res) => {
 
 exports.createTour = (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+  const newTour = Object.assign(req.body, { id: newId });
   tours.push(newTour);
 
   fs.writeFile(
