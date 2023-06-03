@@ -84,13 +84,13 @@ const tourSchema = new mongoose.Schema(
 
 // DOCUMENT MIDDLEWARE:
 
-//runs before .save() and .create() (not .insertMany())
+// Runs before .save() and .create() (not .insertMany())
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-//runs after .save() and .create() (not .insertMany())
+// Runs after .save() and .create() (not .insertMany())
 // tourSchema.post('save', (doc, next) => {
 //   console.log(doc);
 //   next();
