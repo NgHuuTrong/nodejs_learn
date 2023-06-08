@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bscypt = require('bcryptjs');
+const bscrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    require: [true, 'Please tell us your name!'],
+    required: [true, 'Please tell us your name!'],
   },
   email: {
     type: String,
-    require: [true, 'Please provide us your email!'],
+    required: [true, 'Please provide us your email!'],
     unique: true,
     validate: [validator.isEmail, 'This email is invalid'],
   },
@@ -25,13 +25,13 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    require: [true, 'Please provide password'],
+    required: [true, 'Please provide password'],
     minlength: [8, 'Password must have more than 8 characters'],
     select: false,
   },
   passwordConfirm: {
     type: String,
-    require: [true, 'Please confirm your password'],
+    required: [true, 'Please confirm your password'],
     validate: {
       // This  only works on CREATE and SAVE!!! (not update)
       validator: function (ele) {
@@ -48,9 +48,8 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
   // Only run this function if the password was actually modified
   if (!this.isModified('password')) return next();
-
   // Hash the password with cost of 12
-  this.password = await bscypt.hash(this.password, 12);
+  this.password = await bscrypt.hash(this.password, 12);
 
   // Delete passwordConfirm field
   this.passwordConfirm = undefined;
@@ -61,7 +60,7 @@ userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
-  return await bscypt.compare(candidatePassword, userPassword);
+  return await bscrypt.compare(candidatePassword, userPassword);
 };
 
 // If password has been changed after the token issued, return true
