@@ -31,8 +31,15 @@ app.use('/api', limiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 
+// Data sanitization against NoSQL query injection
+// Example: Login without email, only correct password: { "email": { "$gt": "" } }
+
+// Data sanitization against XSS (cross-site scripting attacks)
+
+// Serving statis files
 app.use(express.static(`${__dirname}/public`));
 
+// Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
