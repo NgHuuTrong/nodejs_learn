@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema(
@@ -56,6 +55,7 @@ const tourSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: [true, 'A tour must have a summary'],
+      unique: false,
     },
     description: {
       type: String,
@@ -75,6 +75,7 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
     startLocation: {
       type: {
         type: String,
@@ -98,13 +99,19 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
-
 // DOCUMENT MIDDLEWARE:
 
 // Runs before .save() and .create() (not .insertMany())
