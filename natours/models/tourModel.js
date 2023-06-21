@@ -112,6 +112,13 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 // DOCUMENT MIDDLEWARE:
 
 // Runs before .save() and .create() (not .insertMany())
@@ -148,10 +155,6 @@ tourSchema.pre(/^find/, function (next) {
 tourSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
   next();
-});
-
-tourSchema.virtual('durationWeeks').get(function () {
-  return this.duration / 7;
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
