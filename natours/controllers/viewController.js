@@ -12,8 +12,15 @@ exports.getOverview = catchAsync(async (req, res) => {
   });
 });
 
-exports.getTour = (req, res) => {
+exports.getTour = catchAsync(async (req, res) => {
+  // 1) Get the data, for the requested tour (including reviews and guide)
+  const query = Tour.findOne({ slug: req.params.tourSlug });
+  query.populate({ path: 'reviews', fields: 'review rating user' });
+  const tour = await query;
+  // 2) Build template
+  // 3) Render template using data from 1)
   res.status(200).render('tour', {
-    title: 'The Forest Hiker Tour',
+    title: tour.name,
+    tour,
   });
-};
+});
