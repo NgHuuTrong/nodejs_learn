@@ -11960,7 +11960,7 @@ var showAlert = function showAlert(type, msg) {
   hideAlert();
   var markup = "<div class=\"alert alert--".concat(type, "\">").concat(msg, "</div>");
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
-  setTimeout(hideAlert, 44000);
+  setTimeout(hideAlert, 4000);
 };
 exports.showAlert = showAlert;
 },{}],"login.js":[function(require,module,exports) {
@@ -12034,8 +12034,8 @@ var logout = /*#__PURE__*/function () {
           response = _context2.sent;
           console.log('hello');
           if (response.data.status === 'success') {
+            location.assign('/login');
             (0, _alerts.showAlert)('success', 'Logged out successfully');
-            location.reload(true);
           }
           _context2.next = 11;
           break;

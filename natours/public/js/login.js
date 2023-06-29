@@ -33,8 +33,8 @@ export const logout = async () => {
     console.log('hello');
 
     if (response.data.status === 'success') {
+      location.assign('/login');
       showAlert('success', 'Logged out successfully');
-      location.reload(true);
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
