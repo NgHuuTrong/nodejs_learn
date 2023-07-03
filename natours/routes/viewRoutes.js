@@ -15,6 +15,12 @@ router.get(
 
 router.get('/login', authController.isLoggedin, viewController.getLoginForm);
 
-router.get('/me', authController.isLoggedin, viewController.getAccount);
+router.get('/me', authController.protect, viewController.getAccount);
+
+router.post(
+  '/submit-user-data',
+  authController.protect,
+  viewController.updateUserData
+);
 
 module.exports = router;
