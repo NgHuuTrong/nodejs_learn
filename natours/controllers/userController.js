@@ -1,7 +1,36 @@
+const multer = require('multer');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, 'public/img/users');
+  },
+  filename: (req, file, callback) => {
+    const extension = file.mimetype.split('/')[1];
+    callback(null, `user-${req.user.id}-${Date.now()}.${extension}`);
+  },
+});
+
+// Check file is an image
+const multerFilter = (req, file, callback) => {
+  if (file.mimetype.startsWith('image')) {
+    callback(null, true);
+  } else {
+    callback(
+      new AppError('This file is not an image! Please upload only image', 400)
+    );
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserPhoto = upload.single('photo');
 
 const filteredObj = (obj, ...allowedFields) => {
   const newObj = {};

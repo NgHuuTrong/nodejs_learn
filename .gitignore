@@ -3,3 +3,5 @@ asynchronous/node_modules
 natours/node_modules
 natours/dev-data
 natours/.cache
+natours/public/js/bundle.js
+natours/public/js/bundle.js.map
