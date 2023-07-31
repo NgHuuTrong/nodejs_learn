@@ -1,10 +1,11 @@
 /* eslint-disable */
 import axios from 'axios';
 import { showAlert } from './alerts';
+import User from '../../models/userModel';
 
 export const updateSettings = async (data, type) => {
   try {
-    const endpoint = type === 'data' ? 'updateMe' : 'updateMyPassword';
+    const endpoint = type === 'password' ? 'updateMyPassword' : 'updateMe';
     const res = await axios({
       method: 'PATCH',
       url: `http://localhost:3000/api/v1/users/${endpoint}`,

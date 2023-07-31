@@ -37,12 +37,16 @@ block content
             .form__group
               label.form__label(for='name') Name
               input#name.form__input(type='text', value=`${user.name}`, required, name='name')
+
             .form__group.ma-bt-md
               label.form__label(for='email') Email address
               input#email.form__input(type='email', value=`${user.email}`, required, name='email')
+
             .form__group.form__photo-upload
               img.form__user-photo(src=`/img/users/${user.photo}`, alt=`${user.name}`)
-              a.btn-text(href='') Choose new photo
+              input.form__upload(type='file', accept='image/*', id='photo', name='photo')
+              label.btn-text(for='photo') Choose new photo
+
             .form__group.right
               button.btn.btn--small.btn--green Save settings
         .line &nbsp;

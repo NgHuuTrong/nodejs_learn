@@ -10,6 +10,8 @@ const loginForm = document.querySelector('.form--login');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const updateDataForm = document.querySelector('.form-user-data');
 const updatePasswordForm = document.querySelector('.form-user-password');
+const userAvtDisplay = document.querySelector('.form__user-photo');
+const userAvtInput = document.querySelector('#photo');
 
 // VALUES
 
@@ -29,12 +31,37 @@ if (loginForm) {
 }
 
 if (updateDataForm) {
-  updateDataForm.addEventListener('submit', (e) => {
+  updateDataForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('email').value;
-    const name = document.getElementById('name').value;
-    updateSettings({ email, name }, 'data');
+    document.querySelector('.btn--update--password').textContent =
+      'Updating...';
+    const form = new FormData();
+    form.append('email', document.getElementById('email').value);
+    form.append('name', document.getElementById('name').value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    await updateSettings(form, 'data');
+
+    document.querySelector('.btn--update--password').textContent =
+      'Save settings';
+    location.reload();
   });
+}
+
+const handleDisplayUserPhoto = (e) => {
+  const imgFile = e.target.files?.[0];
+
+  if (!imgFile?.type.startsWith('image/')) return;
+  const reader = new FileReader();
+
+  reader.addEventListener('load', () => {
+    userAvtDisplay.setAttribute('src', reader.result);
+  });
+
+  reader.readAsDataURL(imgFile);
+};
+
+if (userAvtInput) {
+  userAvtInput.addEventListener('change', handleDisplayUserPhoto);
 }
 
 if (updatePasswordForm) {
