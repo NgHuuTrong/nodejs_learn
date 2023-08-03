@@ -10,16 +10,18 @@ router.post(
   bookingController.createCheckoutSession
 );
 
-// router.get(
-//   '/generate-client-token',
-//   authController.protect,
-//   bookingController.generateClientToken
-// );
+router.get(
+  '/',
+  authController.protect,
+  authController.restrictTo('admin'),
+  bookingController.getAllBookings
+);
 
-// router.post(
-//   '/process-checkout/:tourId',
-//   authController.protect,
-//   bookingController.processCheckout
-// );
+router.get(
+  '/:id',
+  authController.protect,
+  authController.restrictTo('admin'),
+  bookingController.getBooking
+);
 
 module.exports = router;

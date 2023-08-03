@@ -1,9 +1,11 @@
+/* eslint-disable */
 const paypal = require('paypal-rest-sdk');
 
 const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 paypal.configure({
   mode: 'sandbox', //sandbox or live
@@ -97,3 +99,7 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
     }
   );
 });
+
+exports.getAllBookings = factory.getAll(Booking);
+
+exports.getBooking = factory.getOne(Booking);
