@@ -3,6 +3,7 @@ import '@babel/polyfill';
 import { login, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSetting';
+import { bookTour } from './paypal';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -12,6 +13,7 @@ const updateDataForm = document.querySelector('.form-user-data');
 const updatePasswordForm = document.querySelector('.form-user-password');
 const userAvtDisplay = document.querySelector('.form__user-photo');
 const userAvtInput = document.querySelector('#photo');
+const bookBtn = document.getElementById('book-tour');
 
 // VALUES
 
@@ -88,4 +90,12 @@ if (updatePasswordForm) {
 
 if (logoutBtn) {
   logoutBtn.addEventListener('click', logout);
+}
+
+if (bookBtn) {
+  bookBtn.addEventListener('click', (e) => {
+    e.target.textContent = 'Processing...';
+    const { tourId } = e.target.dataset;
+    bookTour(tourId);
+  });
 }

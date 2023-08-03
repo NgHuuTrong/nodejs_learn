@@ -30,7 +30,6 @@ export const logout = async () => {
       method: 'GET',
       url: 'http://localhost:3000/api/v1/users/logout',
     });
-    console.log('hello');
 
     if (response.data.status === 'success') {
       location.assign('/login');
