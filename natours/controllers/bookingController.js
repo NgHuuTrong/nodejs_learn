@@ -16,6 +16,7 @@ paypal.configure({
 exports.createCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get Currently booked tour
   const tour = await Tour.findById(req.params.tourId);
+  const { startDateId } = req.params;
 
   // 2) Create checkout session
   const create_payment_json = {
@@ -29,7 +30,7 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
     redirect_urls: {
       return_url: `${req.protocol}://${req.get('host')}/?tour=${
         req.params.tourId
-      }&user=${req.user.id}&price=${tour.price}`,
+      }&user=${req.user.id}&price=${tour.price}&startDateId=${startDateId}`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     },
     transactions: [
@@ -50,7 +51,7 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
           currency: 'USD',
           total: `${tour.price}.00`,
         },
-        description: 'This is the payment description.',
+        description: `Payment for booking ${tour.name} Tour!`,
       },
     ],
   };
@@ -72,29 +73,21 @@ exports.createCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 exports.createBookingCheckout = catchAsync(async (req, res, next) => {
-  const { PayerID, paymentId, price, tour, user } = req.query;
-  console.log(PayerID, paymentId);
-  if (!PayerID || !paymentId || !price || !tour || !user) return next();
+  const { PayerID, paymentId, price, tour, user, startDateId } = req.query;
+  if (!PayerID || !paymentId || !price || !tour || !user || !startDateId)
+    return next();
 
   const execute_payment_json = {
     payer_id: PayerID,
-    transactions: [
-      {
-        amount: {
-          currency: 'USD',
-          total: `${price}.00`,
-        },
-      },
-    ],
   };
-  await paypal.payment.execute(
+  paypal.payment.execute(
     paymentId,
     JSON.stringify(execute_payment_json),
     async function (error, payment) {
       if (error) {
         return next(new AppError(err.message));
       }
-      await Booking.create({ tour, user, price });
+      await Booking.create({ tour, user, price, date: startDateId });
       res.redirect(req.originalUrl.split('?')[0]);
     }
   );

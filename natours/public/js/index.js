@@ -4,6 +4,7 @@ import { login, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSetting';
 import { bookTour } from './paypal';
+import { showAlert } from './alerts';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -14,6 +15,7 @@ const updatePasswordForm = document.querySelector('.form-user-password');
 const userAvtDisplay = document.querySelector('.form__user-photo');
 const userAvtInput = document.querySelector('#photo');
 const bookBtn = document.getElementById('book-tour');
+const startDateSelect = document.getElementById('select-start-date');
 
 // VALUES
 
@@ -93,9 +95,16 @@ if (logoutBtn) {
 }
 
 if (bookBtn) {
-  bookBtn.addEventListener('click', (e) => {
-    e.target.textContent = 'Processing...';
-    const { tourId } = e.target.dataset;
-    bookTour(tourId);
-  });
+  if (startDateSelect.value) {
+    bookBtn.addEventListener('click', (e) => {
+      e.target.textContent = 'Processing...';
+      const { tourId } = e.target.dataset;
+      const startDateId = startDateSelect.value;
+      bookTour(tourId, startDateId);
+    });
+  } else {
+    bookBtn.disabled = true;
+    bookBtn.textContent = 'Tour is full!';
+    startDateSelect.style.display = 'none';
+  }
 }

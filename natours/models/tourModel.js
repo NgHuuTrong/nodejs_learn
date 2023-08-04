@@ -71,12 +71,22 @@ const tourSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    startDates: [Date],
+    startDates: [
+      {
+        date: {
+          type: Date,
+          required: [true, 'A tour must have a start date!'],
+        },
+        participants: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
     secretTour: {
       type: Boolean,
       default: false,
     },
-
     startLocation: {
       type: {
         type: String,

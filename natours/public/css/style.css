@@ -1326,3 +1326,18 @@ body {
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
 }
+
+.select-date {
+  width: 180px;
+  padding: 12px;
+}
+
+.select-date * {
+  height: 50px;
+}
+
+.select-date *:disabled {
+  color: rgb(109, 109, 109);
+  background-color: rgb(85, 197, 122, 0.6);
+  opacity: 0.5;
+}

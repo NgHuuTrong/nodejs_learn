@@ -37,8 +37,8 @@ block content
       div
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Quick facts
-
-          +overviewBox('Next date', `${tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})}`, 'calendar')
+          each tourDate, idx in tour.startDates
+            +overviewBox(`Date ${idx + 1}`, `${tourDate.date.toLocaleString('en-us', {day: 'numeric', month: 'long', year: 'numeric'})}`, 'calendar')
 
           +overviewBox('Difficulty', `${tour.difficulty}`, 'trending-up')
 
@@ -89,8 +89,12 @@ block content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
         if user
+          select.btn.btn--green.span-all-rows.select-date#select-start-date
+            each tourDate in tour.startDates
+              if (tour.maxGroupSize > tourDate.participants)
+                option(value=`${tourDate._id}`)= `${tourDate.date.toLocaleString('en-us', {day: 'numeric', month: 'long', year: 'numeric'})}` 
+              else 
+                option(value=`${tourDate._id}`, disabled)= `${tourDate.date.toLocaleString('en-us', {day: 'numeric', month: 'long', year: 'numeric'})}(Full)` 
           button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
-          //- form(action=`/api/v1/bookings/checkout-session/${tour.id}`, method='post')
-          //-   input(type='submit', value='Buy')
         else 
           a.btn.btn--green.span-all-rows(href='/login') Log in to book tour!

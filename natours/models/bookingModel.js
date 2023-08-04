@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
+const AppError = require('../utils/appError');
 
 const bookingSchema = mongoose.Schema({
   tour: {
@@ -10,6 +12,10 @@ const bookingSchema = mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [true, 'A booking must belong to a User!'],
+  },
+  date: {
+    type: mongoose.Schema.ObjectId,
+    require: [true, 'Please give me exactly date you book!'],
   },
   price: {
     type: Number,
@@ -30,6 +36,23 @@ bookingSchema.pre(/^find/, function (next) {
     path: 'tour',
     select: 'name',
   });
+  next();
+});
+
+bookingSchema.pre('save', async function (next) {
+  const tour = await Tour.findById(this.tour);
+  const startDate = tour.startDates.id(this.date);
+
+  // If there is a maximum number of participants, throw an error.
+  if (startDate.participants >= startDate.maxParticipants)
+    return next(
+      new AppError(
+        'Sorry, but this tour has a maximum number of participants already. Please book another date.'
+      )
+    );
+
+  startDate.participants += 1;
+  await tour.save();
   next();
 });
 
