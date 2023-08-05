@@ -5,6 +5,7 @@ import { displayMap } from './mapbox';
 import { updateSettings } from './updateSetting';
 import { bookTour } from './paypal';
 import { showAlert } from './alerts';
+import { createReview } from './reviews';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
@@ -16,7 +17,9 @@ const userAvtDisplay = document.querySelector('.form__user-photo');
 const userAvtInput = document.querySelector('#photo');
 const bookBtn = document.getElementById('book-tour');
 const startDateSelect = document.getElementById('select-start-date');
-
+const reviewBtn = document.querySelector('.btn--review');
+const reviewSave = document.querySelector('.review-save');
+const closeReview = document.querySelector('.close');
 // VALUES
 
 // DELEGATION
@@ -26,11 +29,12 @@ if (mapBox) {
 }
 
 if (loginForm) {
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    document.querySelector('.btn--login').textContent = 'Logging in...';
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    login(email, password);
+    await login({ email, password });
   });
 }
 
@@ -44,9 +48,6 @@ if (updateDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('photo', document.getElementById('photo').files[0]);
     await updateSettings(form, 'data');
-
-    document.querySelector('.btn--update--password').textContent =
-      'Save settings';
     location.reload();
   });
 }
@@ -107,4 +108,26 @@ if (bookBtn) {
     bookBtn.textContent = 'Tour is full!';
     startDateSelect.style.display = 'none';
   }
+}
+
+if (reviewBtn) {
+  reviewBtn.addEventListener('click', () => {
+    document.querySelector('.bg-modal').style.display = 'flex';
+  });
+}
+
+if (closeReview) {
+  closeReview.addEventListener('click', () => {
+    document.querySelector('.bg-modal').style.display = 'none';
+  });
+}
+
+if (reviewSave) {
+  reviewSave.addEventListener('click', async (e) => {
+    const review = document.getElementById('review').value;
+    const rating = document.getElementById('ratings').value;
+    const { tour, user } = e.target.dataset;
+    await createReview(tour, user, review, rating);
+    document.querySelector('.bg-modal').style.display = 'none';
+  });
 }

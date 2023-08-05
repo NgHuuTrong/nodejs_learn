@@ -51,11 +51,11 @@ block content
           each guide in tour.guides
             .overview-box__detail
               img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.role}`)
-              
+
               - if (guide.role === 'lead-guide')
-                  span.overview-box__label LEAD GUIDE 
+                span.overview-box__label LEAD GUIDE 
               - if (guide.role === 'guide')
-                  span.overview-box__label TOUR GUIDE
+                span.overview-box__label TOUR GUIDE
 
               span.overview-box__text= guide.name
 
@@ -65,7 +65,7 @@ block content
       - const descriptions = tour.description.split('\n');
       each des in descriptions
         p.description__text= des
-  
+
   section.section-pictures
     each img, index in tour.images
       .picture-box
@@ -75,6 +75,20 @@ block content
     #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
   section.section-reviews
+
+    button.btn.btn--review.span-all-rows#review-tour(onclick="openForm()") Review tour now!
+    .bg-modal
+      .modal-contents
+        .close +
+        .form__group.ma-bt-md
+          label.form__label(for='review') Review
+          input#review.form__input(type='text', placeholder='Write your review', required, minlength='10')
+        .form__group.ma-bt-md
+          label.form__label(for='rating') Rating
+          input#ratings.form__input(type='text', placeholder='Rate between 1-5', required, minlength='1')
+        .form__group
+          button.btn.btn--green.review-save(data-tour=`${tour.id}`, data-user=`${user.id}`) Submit
+  
     .reviews
       each review in tour.reviews
         +reviewCard(review)
