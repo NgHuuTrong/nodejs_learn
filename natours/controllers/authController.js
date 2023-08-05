@@ -34,11 +34,15 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  const { name, email, password, passwordConfirm } = req.body;
+  if (!email || !password || !name || !passwordConfirm) {
+    return next(new AppError('Please fill in all detail!'));
+  }
   const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
+    name,
+    email,
+    password,
+    passwordConfirm,
   });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
@@ -65,7 +69,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // If everything is ok, send token to client
-  createSendToken(user, 200, res);
+  createSendToken(user, 201, res);
 });
 
 exports.logout = (req, res, next) => {

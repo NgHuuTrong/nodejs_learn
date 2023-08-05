@@ -2,19 +2,16 @@
 import axios from 'axios';
 import { showAlert } from './alerts';
 
-export const login = async (email, password) => {
+export const login = async (data) => {
   try {
     const response = await axios({
       method: 'POST',
       url: 'http://localhost:3000/api/v1/users/login',
-      data: {
-        email,
-        password,
-      },
+      data,
     });
 
     if (response.data.status === 'success') {
-      showAlert('success', 'Logged in successfully');
+      showAlert('success', 'Logged in successfully.');
       window.setTimeout(() => {
         location.assign('/');
       }, 1000);
@@ -33,7 +30,26 @@ export const logout = async () => {
 
     if (response.data.status === 'success') {
       location.assign('/login');
-      showAlert('success', 'Logged out successfully');
+      showAlert('success', 'Logged out successfully.');
+    }
+  } catch (err) {
+    showAlert('error', err.response.data.message);
+  }
+};
+
+export const signup = async (data) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: 'http://localhost:3000/api/v1/users/signup',
+      data,
+    });
+
+    if (response.data.status === 'success') {
+      showAlert('success', 'Signed up successfully.');
+      window.setTimeout(() => {
+        location.assign('/');
+      }, 1000);
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
