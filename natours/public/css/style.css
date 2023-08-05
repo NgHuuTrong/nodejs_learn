@@ -1160,6 +1160,10 @@ body {
 .card__data svg {
   margin-right: 0.7rem;
 }
+.card__date {
+  display: flex;
+  flex-direction: column;
+}
 .card__icon {
   height: 2rem;
   width: 2rem;

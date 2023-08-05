@@ -23,13 +23,14 @@ exports.deleteReview = factory.deleteOne(Review);
 exports.checkBookedBefore = catchAsync(async (req, res, next) => {
   const booking = await Booking.find({
     tour: req.body.tour,
-    user: req.user.id,
+    user: req.body.user,
   });
 
-  if (booking.length === 0)
+  if (booking.length === 0) {
     return next(
       new AppError('You must book this tour to review and rate it!', 401)
     );
+  }
   next();
 });
 
@@ -39,7 +40,8 @@ exports.checkReviewBefore = catchAsync(async (req, res, next) => {
     user: req.user.id,
   });
 
-  if (review.length > 0)
-    return next(new AppError('You have review and rated it before!', 401));
+  if (review.length > 0) {
+    return next(new AppError('You have reviewed and rated it before!', 401));
+  }
   next();
 });

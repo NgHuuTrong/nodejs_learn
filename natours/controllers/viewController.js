@@ -1,4 +1,5 @@
 const Booking = require('../models/bookingModel');
+const Review = require('../models/reviewModel');
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
@@ -25,11 +26,49 @@ exports.getTour = catchAsync(async (req, res, next) => {
     return next(new AppError('This is no tour with that name!'));
   }
 
+  const booking = await Booking.find({
+    tour: tour.id,
+    user: req.user.id,
+  });
+
+  if (booking.length === 0) {
+    res.locals.isBooked = false;
+  } else {
+    res.locals.isBooked = true;
+  }
+
+  const review = await Review.find({
+    tour: tour.id,
+    user: req.user.id,
+  });
+  console.log(review);
+
+  if (review.length > 0) {
+    res.locals.isReviewed = true;
+    res.locals.reviewed = {
+      review: review[0].review,
+      rating: review[0].rating,
+      id: review[0].id,
+    };
+  } else {
+    res.locals.reviewed = {};
+    res.locals.isReviewed = false;
+  }
+
   // 2) Build template
   // 3) Render template using data from 1)
+  const hi = {
+    isBooked: res.locals.isBooked,
+    isReviewed: res.locals.isReviewed,
+    reviewed: res.locals.reviewed,
+  };
+  console.log(res.locals.reviewed);
   res.status(200).render('tour', {
     title: tour.name,
     tour,
+    // isBooked: req.isBooked,
+    // isReviewed: req.isReviewed,
+    // reviewed: req.reviewed,
   });
 });
 
