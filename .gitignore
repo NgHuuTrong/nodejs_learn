@@ -3,5 +3,8 @@ asynchronous/node_modules
 natours/node_modules
 natours/dev-data
 natours/.cache
+natours/.vscode
 natours/public/js/bundle.js
 natours/public/js/bundle.js.map
+natours/public/bundle.js.map
+natours/config.env

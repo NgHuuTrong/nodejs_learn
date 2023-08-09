@@ -1,9 +1,22 @@
 const multer = require('multer');
 const sharp = require('sharp');
+const cloudinary = require('cloudinary');
+const DatauriParser = require('datauri/parser');
+const path = require('path');
+
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
+
+const dataUri = new DatauriParser();
+
+// Setup cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Store in buffer
 const multerStorage = multer.memoryStorage();
@@ -42,8 +55,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     .resize(500, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
-
+    .toBuffer({ resolveWithObject: true });
   next();
 });
 
@@ -62,21 +74,31 @@ exports.updateMe = catchAsync(async (req, res, next) => {
       )
     );
 
+  // Convert buffer
+  const imageFile = dataUri.format(
+    path.extname(req.file.filename).toString(),
+    req.file.buffer
+  );
+
   // 2) Filtered out unwanted fields names that are not allowed to be updated
   const filteredBody = filteredObj(req.body, 'name', 'email');
-  if (req.file) filteredBody.photo = req.file.filename;
+  if (req.file) filteredBody.photo = imageFile.content;
 
-  // 3) Update user document
-  const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
+  cloudinary.v2.uploader.upload(filteredBody.photo, async (error, result) => {
+    filteredBody.photo = result.secure_url;
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      updateUser,
-    },
+    // 3) Update user document
+    const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        updateUser,
+      },
+    });
   });
 });
 
