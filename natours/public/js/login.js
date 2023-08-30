@@ -6,7 +6,7 @@ export const login = async (data) => {
   try {
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/v1/users/login',
+      url: '/api/v1/users/login',
       data,
     });
 
@@ -25,7 +25,7 @@ export const logout = async () => {
   try {
     const response = await axios({
       method: 'GET',
-      url: 'http://localhost:3000/api/v1/users/logout',
+      url: '/api/v1/users/logout',
     });
 
     if (response.data.status === 'success') {
@@ -41,7 +41,7 @@ export const signup = async (data) => {
   try {
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/v1/users/signup',
+      url: '/api/v1/users/signup',
       data,
     });
 

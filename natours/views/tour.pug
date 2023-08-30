@@ -50,7 +50,7 @@ block content
           h2.heading-secondary.ma-bt-lg Your tour guides
           each guide in tour.guides
             .overview-box__detail
-              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.role}`)
+              img.overview-box__img(src=`${guide.photo}`, alt=`${guide.role}`)
 
               - if (guide.role === 'lead-guide')
                 span.overview-box__label LEAD GUIDE 
@@ -103,7 +103,7 @@ block content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
         if user
-          if isBooking
+          if !isBooked
             select.btn.btn--green.span-all-rows.select-date#select-start-date
               each tourDate in tour.startDates
                 if (tour.maxGroupSize > tourDate.participants)
@@ -112,7 +112,7 @@ block content
                   option(value=`${tourDate._id}`, disabled)= `${tourDate.date.toLocaleString('en-us', {day: 'numeric', month: 'long', year: 'numeric'})}(Full)` 
             button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
           else 
-            button.btn.btn--green.span-all-rows(disabled=true) You have booked!
+            button.btn.btn--green.span-all-rows(disabled=true) You already booked!
 
         else 
           a.btn.btn--green.span-all-rows(href='/login') Log in to book tour!

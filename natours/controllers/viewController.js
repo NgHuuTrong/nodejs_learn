@@ -41,7 +41,6 @@ exports.getTour = catchAsync(async (req, res, next) => {
     tour: tour.id,
     user: req.user.id,
   });
-  console.log(review);
 
   if (review.length > 0) {
     res.locals.isReviewed = true;
@@ -57,18 +56,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
 
   // 2) Build template
   // 3) Render template using data from 1)
-  const hi = {
-    isBooked: res.locals.isBooked,
-    isReviewed: res.locals.isReviewed,
-    reviewed: res.locals.reviewed,
-  };
-  console.log(res.locals.reviewed);
   res.status(200).render('tour', {
     title: tour.name,
     tour,
-    // isBooked: req.isBooked,
-    // isReviewed: req.isReviewed,
-    // reviewed: req.reviewed,
   });
 });
 

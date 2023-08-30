@@ -36,6 +36,7 @@ if (loginForm) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     await login({ email, password });
+    document.querySelector('.btn--login').textContent = 'Login';
   });
 }
 
@@ -48,6 +49,7 @@ if (signupForm) {
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
     await signup({ name, email, password, passwordConfirm });
+    document.querySelector('.btn--signup').textContent = 'Sign up';
   });
 }
 
@@ -148,3 +150,6 @@ if (reviewSave) {
     document.querySelector('.bg-modal').style.display = 'none';
   });
 }
+
+const alertMessage = document.querySelector('body').dataset.alert;
+if (alertMessage) showAlert('success', alertMessage, 20);

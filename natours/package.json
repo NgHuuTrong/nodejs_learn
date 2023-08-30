@@ -2,14 +2,15 @@
   "name": "natours",
   "version": "1.0.0",
   "description": "Learning node, express, mongoDB",
-  "main": "app.js",
+  "main": "index.js",
+  "browserslist": "> 0.25%, not dead",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production& nodemon server.js",
     "debug": "ndb server.js",
-    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
-    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --no-minify"
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public --out-file bundle.js",
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public --out-file bundle.js --no-minify"
   },
   "keywords": [
     "express"
@@ -17,7 +18,7 @@
   "author": "nghuutrong",
   "license": "ISC",
   "engines": {
-    "node": "> 10.0.0"
+    "node": "> 12"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -43,12 +44,11 @@
     "pug": "^3.0.2",
     "sharp": "^0.32.1",
     "slugify": "^1.6.6",
+    "terser": "^5.19.2",
     "validator": "^13.9.0",
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.0",
     "eslint": "^8.38.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
