@@ -5,3 +5,7 @@ natours/dev-data
 natours/.cache
 natours/.vscode
 natours/config.env
+
+.cache/
+.vscode/
+node_modules/
