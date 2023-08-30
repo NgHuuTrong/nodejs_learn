@@ -4,6 +4,4 @@ natours/node_modules
 natours/dev-data
 natours/.cache
 natours/.vscode
-natours/public/bundle.js
-natours/public/bundle.js.map
 natours/config.env
