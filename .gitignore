@@ -9,3 +9,7 @@ natours/config.env
 .cache/
 .vscode/
 node_modules/
+node_modules
+
+/public/js/bundle.js  
+/public/js/bundle.js.map 

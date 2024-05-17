@@ -15,21 +15,24 @@ const signToken = (id) =>
 const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
+  };
+
+  if (process.env.NODE_ENV) cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
+
   // res.cookie('jwt', token, {
   //   expires: new Date(
   //     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
   //   ),
   //   httpOnly: true,
-  //   // secure: req.secure || req.headers('x-forwarded-proto') === 'https',
+  //   secure: req.secure || req.headers('x-forwarded-proto') === 'https',
   // });
-
-  res.cookie('jwt', token, {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    secure: req.secure || req.headers('x-forwarded-proto') === 'https',
-  });
 
   user.password = undefined; // Remove user's password from output
 
@@ -192,17 +195,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 3) Send it to user's email
   const resetURL = `${req.protocol}://${req.get(
     'host'
-  )}/api/v1/users/resetPassword/${resetToken}`;
+  )}/resetPassword/${resetToken}`;
 
   // const message = `Forgot your password? Submit a PATCH with your new password and passwordConfirm to ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
   try {
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: 'Your password reset token (Valid for 10min)',
-    //   message,
-    // });
-
     await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({

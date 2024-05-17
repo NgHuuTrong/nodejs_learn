@@ -21,37 +21,40 @@ exports.getTour = catchAsync(async (req, res, next) => {
   const query = Tour.findOne({ slug: req.params.tourSlug });
   query.populate({ path: 'reviews', fields: 'review rating user' });
   const tour = await query;
+  console.log("hello");
 
   if (!tour) {
     return next(new AppError('This is no tour with that name!'));
   }
 
-  const booking = await Booking.find({
-    tour: tour.id,
-    user: req.user.id,
-  });
+  if (req.user) {
+    const booking = await Booking.find({
+      tour: tour.id,
+      user: req.user.id,
+    });
 
-  if (booking.length === 0) {
-    res.locals.isBooked = false;
-  } else {
-    res.locals.isBooked = true;
-  }
+    if (booking.length === 0) {
+      res.locals.isBooked = false;
+    } else {
+      res.locals.isBooked = true;
+    }
 
-  const review = await Review.find({
-    tour: tour.id,
-    user: req.user.id,
-  });
+    const review = await Review.find({
+      tour: tour.id,
+      user: req.user.id,
+    });
 
-  if (review.length > 0) {
-    res.locals.isReviewed = true;
-    res.locals.reviewed = {
-      review: review[0].review,
-      rating: review[0].rating,
-      id: review[0].id,
-    };
-  } else {
-    res.locals.reviewed = {};
-    res.locals.isReviewed = false;
+    if (review.length > 0) {
+      res.locals.isReviewed = true;
+      res.locals.reviewed = {
+        review: review[0].review,
+        rating: review[0].rating,
+        id: review[0].id,
+      };
+    } else {
+      res.locals.reviewed = {};
+      res.locals.isReviewed = false;
+    }
   }
 
   // 2) Build template
@@ -71,6 +74,19 @@ exports.getLoginForm = (req, res) => {
 exports.getSignupForm = (req, res) => {
   res.status(200).render('signup', {
     title: 'Sign up new account',
+  });
+};
+
+exports.getForgotPasswordForm = (req, res) => {
+  res.status(200).render('forgotPassword', {
+    title: 'Forgot Password',
+  });
+};
+
+exports.getResetPasswordForm = (req, res) => {
+  res.status(200).render('resetPassword', {
+    title: 'Reset Password',
+    token: req.params.token,
   });
 };
 

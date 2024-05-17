@@ -6,11 +6,14 @@ import { updateSettings } from './updateSetting';
 import { bookTour } from './paypal';
 import { showAlert } from './alerts';
 import { createReview, editReview } from './reviews';
+import { forgotPassword, resetPassword } from './forgotPassword';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const signupForm = document.querySelector('.form--signup');
+const forgotPasswordForm = document.querySelector('.form--forgot-password');
+const resetPasswordForm = document.querySelector('.form--reset-password');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const updateDataForm = document.querySelector('.form-user-data');
 const updatePasswordForm = document.querySelector('.form-user-password');
@@ -53,9 +56,35 @@ if (signupForm) {
   });
 }
 
+if (forgotPasswordForm) {
+  forgotPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelector('.btn--forgot-password').textContent = 'Sending...';
+    const email = document.getElementById('email').value;
+    await forgotPassword({ email });
+    document.querySelector('.btn--forgot-password').textContent = 'Send email';
+  });
+}
+
+if (resetPasswordForm) {
+  resetPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelector('.btn--reset-password').textContent = 'Resetting...';
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+    const { token } = e.target.dataset;
+    console.log({ password, passwordConfirm }, token);
+    await resetPassword({ password, passwordConfirm }, token);
+    document.querySelector('.btn--reset-password').textContent =
+      'Reset password';
+  });
+}
+
 if (updateDataForm) {
   updateDataForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    console.log(typeof document.getElementById('photo').files[0]);
+    console.log(document.getElementById('photo').files[0]);
     document.querySelector('.btn--update--password').textContent =
       'Updating...';
     const form = new FormData();
@@ -63,7 +92,7 @@ if (updateDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('photo', document.getElementById('photo').files[0]);
     await updateSettings(form, 'data');
-    location.reload();
+    // location.reload();
   });
 }
 

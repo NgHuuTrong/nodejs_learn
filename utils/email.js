@@ -14,7 +14,13 @@ module.exports = class Email {
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       // Send grid
-      return 1;
+      return nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL,
+          pass: process.env.GMAIL_PASSWORD,
+        },
+      });
     }
 
     return nodemailer.createTransport({
@@ -56,7 +62,7 @@ module.exports = class Email {
   async sendPasswordReset() {
     await this.send(
       'passwordReset',
-      'Your password reset token (valid for only 10min'
+      'Your password reset token (valid for only 10min)'
     );
   }
 };
